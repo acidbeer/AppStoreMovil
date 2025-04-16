@@ -13,7 +13,7 @@
     <item>
         <shape>
             <solid android:color="@android:color/transparent" /> <!-- Fondo transparente -->
-            <stroke android:width="2dp" android:color="#FFFFFF" />
+            <stroke android:width="2dp" android:color="#9C27B0" />
             <corners android:radius="8dp" />
         </shape>
     </item>
