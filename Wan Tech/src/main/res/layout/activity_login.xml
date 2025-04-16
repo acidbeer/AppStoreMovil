@@ -5,6 +5,79 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F1F3E8"
+    android:padding="24dp"
     tools:context=".LoginActivity">
+
+    <!-- Logo Texto -->
+    <TextView
+        android:id="@+id/tvLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TECNOLOGY STORE"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:background="#CDDC39"
+        android:padding="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp" />
+
+    <!-- Título "Log in" -->
+    <TextView
+        android:id="@+id/tvLoginTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Log in"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@id/tvLogo"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Campo Email -->
+    <EditText
+        android:id="@+id/etEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="jane@example.com"
+        android:background="@drawable/edittext_border"
+        android:padding="12dp"
+        android:inputType="textEmailAddress"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/tvLoginTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Campo Contraseña -->
+    <EditText
+        android:id="@+id/etPassword"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="********"
+        android:background="@drawable/edittext_border"
+        android:padding="12dp"
+        android:inputType="textPassword"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/etEmail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Botón Log In -->
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="LOG IN"
+        android:textColor="#FFFFFF"
+        android:background="#2C2C2C"
+        android:padding="12dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/etPassword"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
