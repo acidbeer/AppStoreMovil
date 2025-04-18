@@ -31,7 +31,7 @@ class LoginActivity : AppCompatActivity() {
                 // Aquí podrías validar con una API o base de datos, por ahora es solo demostrativo
                 if (email == "jane@example.com" && password == "123456") {
                     // Ir a otra actividad
-                    val intent = Intent(this, MainActivity::class.java)
+                    val intent = Intent(this, ProductActivity::class.java)
                     startActivity(intent)
                     finish()
                 } else {
