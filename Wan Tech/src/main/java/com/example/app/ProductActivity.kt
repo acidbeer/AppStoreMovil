@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.app.model.Product
 import com.bumptech.glide.Glide
 
@@ -33,14 +35,34 @@ class ProductActivity : AppCompatActivity() {
         Glide.with(this).load(featuredProduct.imageUrl).into(imageView)
 
         imageView.setOnClickListener {
-            val intent = Intent(this, ProductDetailActivity::class.java).apply {
-                putExtra("id", featuredProduct.id)
-                putExtra("name", featuredProduct.name)
-                putExtra("imageUrl", featuredProduct.imageUrl)
-                putExtra("price", featuredProduct.price)
-                putExtra("description", featuredProduct.description)
-            }
-            startActivity(intent)
+            goToDetail(featuredProduct)
+        }
+
+        // Lista horizontal
+        val popularRecycler = findViewById<RecyclerView>(R.id.popularRecycler)
+        popularRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        popularRecycler.adapter = PopularAdapter(getPopularProducts()) { product ->
+            goToDetail(product)
         }
     }
+
+    private fun getPopularProducts(): List<Product> {
+        return listOf(
+            Product(2, "iPhone 14", "https://i.imgur.com/dR9lEqC.png", "$4.599.000", "Nuevo iPhone con chip A15, pantalla OLED"),
+            Product(3, "Smartwatch Xiaomi", "https://i.imgur.com/8N2D8MN.png", "$349.000", "Resistente al agua, con monitoreo cardíaco"),
+            Product(4, "Samsung Galaxy S22", "https://i.imgur.com/WBh1Icy.png", "$3.999.000", "Pantalla AMOLED, cámara de 50MP")
+        )
+    }
+
+    private fun goToDetail(product: Product) {
+        val intent = Intent(this, ProductDetailActivity::class.java).apply {
+            putExtra("id", product.id)
+            putExtra("name", product.name)
+            putExtra("imageUrl", product.imageUrl)
+            putExtra("price", product.price)
+            putExtra("description", product.description)
+        }
+        startActivity(intent)
+    }
+
 }

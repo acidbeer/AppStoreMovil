@@ -1,5 +1,6 @@
 package com.example.app
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
@@ -18,6 +19,14 @@ class ProductDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_detail)
+        val toolbar = findViewById<com.google.android.material.appbar.MaterialToolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Detalle del producto"
+
+        toolbar.setNavigationOnClickListener {
+            finish() // o onBackPressedDispatcher.onBackPressed() para API 33+
+        }
 
         val id = intent.getIntExtra("id", 0)
         val name = intent.getStringExtra("name") ?: ""
@@ -35,7 +44,15 @@ class ProductDetailActivity : AppCompatActivity() {
         findViewById<Button>(R.id.buyButton).setOnClickListener {
             lifecycleScope.launch {
                 db.productDao().insert(ProductEntity(id, name, imageUrl, price, description, isInCart = false))
-                Toast.makeText(this@ProductDetailActivity, "¡Producto comprado!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ProductDetailActivity, "¡Mas Cerca De Tu Producto!", Toast.LENGTH_SHORT).show()
+
+                // Ir a la pantalla de compra
+                val intent = Intent(this@ProductDetailActivity, BuyActivity::class.java).apply {
+                    putExtra("name", name)
+                    putExtra("price", price)
+                    putExtra("imageUrl", imageUrl)
+                }
+                startActivity(intent)
             }
         }
 
