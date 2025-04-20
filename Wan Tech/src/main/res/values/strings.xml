@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">App</string>
+    <string name="ochoajairo73_gmail_com">ochoajairo73@gmail.com</string>
+    <string name="register">Register</string>
+    <string name="contrasena">Contraseña</string>
+    <string name="tecnology_store">TECNOLOGY STORE</string>
+    <string name="usuario">Usuario</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="by_signing_up_you_agree_to_photo_s_terms_of_service_and_polivacy">By signing up, you agree to Photo´s Terms of Service and Privacy Policy</string>
 </resources>
