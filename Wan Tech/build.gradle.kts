@@ -57,7 +57,7 @@ dependencies {
     kapt("com.github.bumptech.glide:compiler:4.15.1")
 
     // Para usar viewModelScope
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     // Tests
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

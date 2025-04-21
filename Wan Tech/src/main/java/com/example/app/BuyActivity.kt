@@ -1,5 +1,6 @@
 package com.example.app
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
@@ -15,6 +16,7 @@ class BuyActivity: AppCompatActivity() {
 
     private lateinit var purchaseViewModel: PurchaseViewModel
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_buy)
@@ -29,6 +31,7 @@ class BuyActivity: AppCompatActivity() {
         val nameEditText = findViewById<EditText>(R.id.nameEditText)
         val emailEditText = findViewById<EditText>(R.id.emailEditText)
         val addressEditText = findViewById<EditText>(R.id.addressEditText)
+        val unitEditText = findViewById<EditText>(R.id.unitEditText)
 
         // ViewModel
         purchaseViewModel = ViewModelProvider(this)[PurchaseViewModel::class.java]
@@ -47,9 +50,10 @@ class BuyActivity: AppCompatActivity() {
             val userName = nameEditText.text.toString().trim()
             val userEmail = emailEditText.text.toString().trim()
             val userAddress = addressEditText.text.toString().trim()
+            val userUnit = unitEditText.text.toString().trim()
 
             // Validar que los campos no estén vacíos
-            if (userName.isEmpty() || userEmail.isEmpty() || userAddress.isEmpty()) {
+            if (userName.isEmpty() || userEmail.isEmpty() || userAddress.isEmpty() || userUnit.isEmpty()) {
                 Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
