@@ -46,6 +46,7 @@ class ProductDetailActivity : AppCompatActivity() {
                 db.productDao().insert(ProductEntity(id, name, imageUrl, price, description, isInCart = false))
                 Toast.makeText(this@ProductDetailActivity, "¡Mas Cerca De Tu Producto!", Toast.LENGTH_SHORT).show()
 
+
                 // Ir a la pantalla de compra
                 val intent = Intent(this@ProductDetailActivity, BuyActivity::class.java).apply {
                     putExtra("name", name)
@@ -60,6 +61,9 @@ class ProductDetailActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 db.productDao().insert(ProductEntity(id, name, imageUrl, price, description, isInCart = true))
                 Toast.makeText(this@ProductDetailActivity, "Agregado al carrito", Toast.LENGTH_SHORT).show()
+                // Redirigir al carrito de compras
+                val intent = Intent(this@ProductDetailActivity, CartShopping::class.java)
+                startActivity(intent)
             }
         }
     }
