@@ -7,4 +7,12 @@
     <string name="usuario">Usuario</string>
     <string name="sign_up">Sign Up</string>
     <string name="by_signing_up_you_agree_to_photo_s_terms_of_service_and_polivacy">By signing up, you agree to Photo´s Terms of Service and Privacy Policy</string>
+    <string name="log_in">Log in</string>
+    <string name="jane_example_com">jane@example.com</string>
+    <string name="key">********</string>
+    <string name="loginbtn">LOGIN</string>
+    <string name="promoci_n">Promoción</string>
+    <string name="logo">Logo</string>
+    <string name="registerprincipal">REGISTER</string>
+    <string name="log_inprincipal">LOG IN</string>
 </resources>

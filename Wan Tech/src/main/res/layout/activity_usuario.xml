@@ -13,7 +13,7 @@
         android:layout_height="45dp"
         android:background="#CDDC39"
         android:padding="8dp"
-        android:text="TECNOLOGY STORE"
+        android:text="@string/tecnology_store"
         android:textColor="#000000"
         android:textSize="20sp"
         android:textStyle="bold"

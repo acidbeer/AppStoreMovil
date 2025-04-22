@@ -15,7 +15,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="32dp"
-        android:contentDescription="Promoción"
+        android:contentDescription="@string/promoci_n"
         android:scaleType="centerCrop"
         android:src="@drawable/fondo"
         app:layout_constraintTop_toTopOf="parent"
@@ -41,13 +41,13 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/logo"
-            android:contentDescription="Logo" />
+            android:contentDescription="@string/logo" />
 
         <TextView
             android:id="@+id/appName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="technology store"
+            android:text="@string/tecnology_store"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -73,7 +73,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="LOG IN"
+            android:text="@string/log_inprincipal"
             android:textColor="#000000"
             android:layout_marginEnd="8dp"
             android:background="@drawable/button_login_selector"
@@ -85,7 +85,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="REGISTER"
+            android:text="@string/registerprincipal"
             android:textColor="#FFFFFF"
             android:background="@drawable/button_border"
             android:backgroundTint="@null"

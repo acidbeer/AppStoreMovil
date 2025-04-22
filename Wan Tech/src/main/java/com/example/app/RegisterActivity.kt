@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-
-
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -15,15 +15,23 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        // Encuentra el botón por su ID
-        val registerButton: Button = findViewById(R.id.registerButton)
+        // Referencias a los campos de entrada
+        val emailEditText = findViewById<EditText>(R.id.etEmailRegister)
+        val passwordEditText = findViewById<EditText>(R.id.etPasswordRegister)
+        val registerButton = findViewById<Button>(R.id.RegisterButton)
 
-        // Establece el OnClickListener para el botón
+        // Listener para el botón de registro
         registerButton.setOnClickListener {
-            // Crea un Intent para abrir UsuarioActivity
-            val intent = Intent(this, UsuarioActivity::class.java)
-            // Inicia UsuarioActivity
-            startActivity(intent)
+            val email = emailEditText.text.toString().trim()
+            val password = passwordEditText.text.toString().trim()
+
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Por favor completa correo y contraseña", Toast.LENGTH_SHORT).show()
+            } else {
+                // Ir a UsuarioActivity si los campos están completos
+                val intent = Intent(this, UsuarioActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 }
