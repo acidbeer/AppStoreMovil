@@ -9,15 +9,24 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Imagen del producto -->
+        <!-- Imagen del producto individual -->
         <ImageView
             android:id="@+id/productImageBuy"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:scaleType="fitCenter"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="16dp"
+            android:visibility="gone" />
 
-        <!-- Nombre del producto -->
+        <!-- Lista de productos múltiples -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/productsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone" />
+
+        <!-- Nombre del producto individual -->
         <TextView
             android:id="@+id/productNameBuy"
             android:layout_width="wrap_content"
@@ -25,9 +34,10 @@
             android:text="Nombre del producto"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
 
-        <!-- Precio -->
+        <!-- Precio del producto individual -->
         <TextView
             android:id="@+id/productPriceBuy"
             android:layout_width="wrap_content"
@@ -35,9 +45,10 @@
             android:text="$0.00"
             android:textColor="@android:color/holo_red_dark"
             android:textSize="16sp"
-            android:layout_marginBottom="24dp" />
+            android:layout_marginBottom="24dp"
+            android:visibility="gone" />
 
-        <!-- Campos de datos del comprador -->
+        <!-- Campos del comprador -->
         <EditText
             android:id="@+id/nameEditText"
             android:layout_width="match_parent"
@@ -61,14 +72,8 @@
             android:hint="Dirección de envío"
             android:inputType="textPostalAddress"
             android:layout_marginBottom="12dp" />
-        <EditText
-            android:id="@+id/unitEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Unidades"
-            android:inputType="textPostalAddress"
-            android:layout_marginBottom="12dp" />
 
+        <!-- Total general solo visible con múltiples productos -->
         <TextView
             android:id="@+id/totalPriceTextView"
             android:layout_width="wrap_content"
@@ -76,9 +81,11 @@
             android:text="Total: $0.00"
             android:textSize="18sp"
             android:textColor="@android:color/holo_red_dark"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
 
-        <!-- Botón de compra -->
+        <!-- Botón de confirmar -->
         <Button
             android:id="@+id/confirmBuyButton"
             android:layout_width="match_parent"

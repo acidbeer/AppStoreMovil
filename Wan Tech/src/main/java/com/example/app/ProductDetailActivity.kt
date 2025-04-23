@@ -2,6 +2,7 @@ package com.example.app
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
@@ -11,7 +12,9 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.app.data.local.AppDatabase
 import com.example.app.data.local.ProductEntity
+import com.example.app.model.Product
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 
 class ProductDetailActivity : AppCompatActivity() {
 

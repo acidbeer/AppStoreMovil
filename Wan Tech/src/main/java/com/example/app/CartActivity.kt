@@ -68,7 +68,7 @@ class CartActivity : AppCompatActivity() {
 
             // Pasar los productos a la BuyActivity
             val intent = Intent(this@CartActivity, BuyActivity::class.java)
-            intent.putParcelableArrayListExtra("cartItems", ArrayList(cartProducts)) // Pasa los productos del carrito
+            intent.putParcelableArrayListExtra("selectedProducts", ArrayList(cartProducts)) // Pasa los productos del carrito
             startActivity(intent)
         }
     }
