@@ -29,6 +29,7 @@ class BuyActivity: AppCompatActivity() {
         val nameEditText = findViewById<EditText>(R.id.nameEditText)
         val emailEditText = findViewById<EditText>(R.id.emailEditText)
         val addressEditText = findViewById<EditText>(R.id.addressEditText)
+        val unitEditText = findViewById<EditText>(R.id.unitEditText)
 
         // ViewModel
         purchaseViewModel = ViewModelProvider(this)[PurchaseViewModel::class.java]
@@ -47,9 +48,10 @@ class BuyActivity: AppCompatActivity() {
             val userName = nameEditText.text.toString().trim()
             val userEmail = emailEditText.text.toString().trim()
             val userAddress = addressEditText.text.toString().trim()
+            val userUnit = unitEditText.text.toString().trim()
 
             // Validar que los campos no estén vacíos
-            if (userName.isEmpty() || userEmail.isEmpty() || userAddress.isEmpty()) {
+            if (userName.isEmpty() || userEmail.isEmpty() || userAddress.isEmpty()|| userUnit.isEmpty()) {
                 Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -60,12 +62,18 @@ class BuyActivity: AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Crear objeto de compra
+            // Validar que la cantidad sea un número válido
+            val quantity = userUnit.toIntOrNull()
+            if (quantity == null || quantity <= 0) {
+                Toast.makeText(this, "Por favor, ingresa una cantidad válida", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            // Crear objeto de compra con la cantidad
             val purchase = PurchaseEntity(
                 name = productName ?: "Nombre no disponible",
                 price = productPrice ?: "$0.00",
-                imageUrl = productImageUrl ?: ""
-                // Podrías extender PurchaseEntity para incluir nombre/email/dirección si lo necesitas
+                imageUrl = productImageUrl ?: "",
+                quantity = quantity // Incluir la cantidad en el objeto
             )
 
             // Guardar compra en la base de datos

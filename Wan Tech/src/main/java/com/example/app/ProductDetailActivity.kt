@@ -2,6 +2,7 @@ package com.example.app
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -59,11 +60,19 @@ class ProductDetailActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.cartButton).setOnClickListener {
             lifecycleScope.launch {
-                db.productDao().insert(ProductEntity(id, name, imageUrl, price, description, isInCart = true))
-                Toast.makeText(this@ProductDetailActivity, "Agregado al carrito", Toast.LENGTH_SHORT).show()
-                // Redirigir al carrito de compras
-                val intent = Intent(this@ProductDetailActivity, CartShopping::class.java)
+                val existingProduct = db.productDao().getById(id)
+                if (existingProduct?.isInCart == true) {
+                    Toast.makeText(this@ProductDetailActivity, "Este producto ya está en tu carrito.", Toast.LENGTH_SHORT).show()
+                } else {
+                    db.productDao().insert(ProductEntity(id, name, imageUrl, price, description, isInCart = true))
+                    Toast.makeText(this@ProductDetailActivity, "Producto agregado al carrito.", Toast.LENGTH_SHORT).show()
+                }
+
+                // Redirigir al carrito, sin importar si ya estaba o se acaba de agregar
+                Log.d("ProductDetailActivity", "Redirigiendo al carrito...")
+                val intent = Intent(this@ProductDetailActivity, CartActivity::class.java)
                 startActivity(intent)
+
             }
         }
     }

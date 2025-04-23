@@ -61,6 +61,22 @@
             android:hint="Dirección de envío"
             android:inputType="textPostalAddress"
             android:layout_marginBottom="12dp" />
+        <EditText
+            android:id="@+id/unitEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Unidades"
+            android:inputType="textPostalAddress"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:id="@+id/totalPriceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total: $0.00"
+            android:textSize="18sp"
+            android:textColor="@android:color/holo_red_dark"
+            android:layout_marginTop="16dp"/>
 
         <!-- Botón de compra -->
         <Button
