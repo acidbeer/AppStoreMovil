@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="registerButton" type="id">registerButton</item>
+    <id name="registerButton" />
 </resources>
