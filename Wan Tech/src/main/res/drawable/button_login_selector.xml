@@ -3,7 +3,7 @@
     <!-- Estado presionado -->
     <item android:state_pressed="true">
         <shape>
-            <solid android:color="#E1BEE7" /> <!-- Morado claro al presionar -->
+            <solid android:color="#ECF0F1" /> <!-- Morado claro al presionar -->
             <stroke android:width="2dp" android:color="#9C27B0" /> <!-- Borde morado -->
             <corners android:radius="8dp" />
         </shape>
@@ -12,9 +12,11 @@
     <!-- Estado normal -->
     <item>
         <shape>
-            <solid android:color="#FFFFFF" /> <!-- Fondo blanco -->
-            <stroke android:width="2dp" android:color="#9C27B0" /> <!-- Borde morado -->
-            <corners android:radius="8dp" />
+            <solid android:color="#E67E22"
+                android:textColor="#2C3E50"
+                /> <!-- Fondo blanco -->
+            <stroke android:width="2dp" android:color="#2C3E50" /> <!-- Borde morado -->
+            <corners android:radius="9dp" />
         </shape>
     </item>
 

@@ -5,35 +5,33 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F1F3E8"
+    android:background="#ECF0F1"
     tools:context=".RegisterActivity">
 
-    <!-- Logo Texto -->
+    <!-- Título "Register" -->
     <TextView
         android:id="@+id/tvLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="72dp"
-        android:background="#CDDC39"
         android:padding="8dp"
         android:text="@string/tecnology_store"
-        android:textColor="#000000"
+        android:textColor="#2C3E50"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Título "Register" -->
     <TextView
         android:id="@+id/tvRegisterTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="32dp"
         android:text="@string/register"
-        android:textColor="#000000"
-        android:textSize="24sp"
+        android:textColor="#2C3E50"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvLogo" />
@@ -42,12 +40,13 @@
     <EditText
         android:id="@+id/etEmailRegister"
         android:layout_width="349dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="44dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:background="@drawable/edittext_border"
         android:hint="@string/ochoajairo73_gmail_com"
         android:inputType="textEmailAddress"
         android:padding="12dp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.483"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,21 +62,21 @@
         android:hint="@string/key"
         android:inputType="textPassword"
         android:padding="12dp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etEmailRegister"
         tools:ignore="NotSibling" />
 
     <!-- Botón Register -->
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/RegisterButton"
         android:layout_width="348dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="24dp"
-        android:background="#2C2C2C"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/button_login_selector"
         android:padding="12dp"
         android:text="@string/register"
-        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etPasswordRegister" />

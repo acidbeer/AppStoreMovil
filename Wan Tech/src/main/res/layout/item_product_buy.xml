@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="8dp"
-    android:layout_marginBottom="8dp">
+    android:layout_marginBottom="8dp"
+    android:background="#E6E9E9">
 
     <ImageView
         android:id="@+id/imageViewProductBuy"
@@ -24,6 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Producto"
+            android:textColor="#2C3E50"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -32,6 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="x1"
+            android:textColor="#95A5A6"
             android:textSize="14sp" />
 
         <TextView
@@ -40,6 +43,6 @@
             android:layout_height="wrap_content"
             android:text="$0.00"
             android:textSize="14sp"
-            android:textColor="@android:color/holo_red_dark"/>
+            android:textColor="@android:color/holo_blue_light"/>
     </LinearLayout>
 </LinearLayout>

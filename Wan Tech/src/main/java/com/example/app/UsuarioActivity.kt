@@ -12,10 +12,10 @@ class UsuarioActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_usuario)
+        setContentView(R.layout.activity_register)
 
-        val etUsuario = findViewById<EditText>(R.id.etUsuario)
-        val btnSignUp = findViewById<Button>(R.id.btnSignUp)
+        val etUsuario = findViewById<EditText>(R.id.etEmailRegister)
+        val btnSignUp = findViewById<Button>(R.id.RegisterButton)
 
         // Al hacer click en el btnSignup se ejecuta lo siguiente
         btnSignUp.setOnClickListener {

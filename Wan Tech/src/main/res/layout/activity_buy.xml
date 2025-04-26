@@ -2,15 +2,19 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="#ECF0F1">
+
 
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <!-- Imagen del producto individual -->
         <ImageView
+
             android:id="@+id/productImageBuy"
             android:layout_width="match_parent"
             android:layout_height="200dp"
@@ -54,6 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Nombre completo"
+            android:textSize="14sp"
             android:inputType="textPersonName"
             android:layout_marginBottom="12dp" />
 
@@ -63,10 +68,12 @@
             android:layout_height="wrap_content"
             android:hint="Correo electrónico"
             android:inputType="textEmailAddress"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="12dp"
+            android:textSize="14sp"/>
 
         <EditText
             android:id="@+id/addressEditText"
+            android:textSize="14sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Dirección de envío"
@@ -86,8 +93,9 @@
             android:visibility="gone" />
 
         <!-- Botón de confirmar -->
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/confirmBuyButton"
+            android:background="@drawable/button_login_selector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="CONFIRMAR COMPRA"

@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="12dp">
+    android:padding="12dp"
+    android:background="#E6E9E9">
 
     <ImageView
         android:id="@+id/productImage"
@@ -37,6 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Nombre del Producto"
+            android:textColor="#2C3E50"
             android:textStyle="bold"
             android:textSize="16sp"
             android:layout_marginBottom="4dp" />
@@ -46,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="$0.00"
-            android:textColor="@android:color/holo_red_dark"
+            android:textColor="@android:color/holo_blue_light"
             android:textSize="14sp"
             android:layout_marginBottom="6dp" />
         <!-- EditText para la cantidad de unidades -->
@@ -56,6 +58,7 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             android:hint="Cantidad"
+            android:textColor="#95A5A6"
             android:text="1"
             android:maxLines="1"
             android:layout_marginBottom="6dp" />
@@ -67,7 +70,7 @@
             android:layout_height="wrap_content"
             android:text="Eliminar"
             android:backgroundTint="@android:color/holo_red_light"
-            android:textColor="@android:color/white"
+            android:textColor="#2C3E50"
             android:padding="4dp" />
     </LinearLayout>
 
