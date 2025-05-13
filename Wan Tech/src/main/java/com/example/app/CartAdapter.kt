@@ -12,9 +12,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.app.data.local.ProductEntity
-import com.example.app.utils.toSafePriceDouble
 
-class CartAdapter(private var products: List<ProductEntity>,
+
+class CartAdapter(private var products: MutableList<ProductEntity>,
                   private val listener: OnProductClickListener):
     RecyclerView.Adapter<CartAdapter.CartViewHolder>(){
 
@@ -29,58 +29,59 @@ class CartAdapter(private var products: List<ProductEntity>,
     }
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
-        val product = products[position]
-        holder.productName.text = product.name
-        holder.productPrice.text = product.price
-        Glide.with(holder.itemView.context).load(product.imageUrl).into(holder.productImage)
-
-        // Inicializar el campo de cantidad (esto puede venir de la base de datos si es necesario)
-        holder.productQuantity.setText(product.quantity.toString())
-
-        // Escuchar los cambios en la cantidad del producto
-        holder.productQuantity.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {}
-
-            override fun afterTextChanged(editable: Editable?) {
-                val quantity = editable.toString().toIntOrNull() ?: 1
-                product.quantity = quantity // Actualiza el valor de la cantidad
-                listener.onProductQuantityChanged(product) // Notifica a la actividad que la cantidad cambió
-                updateTotalPrice() // Actualiza el precio total
-            }
-        })
-
-        // Manejo del botón de eliminar
-        holder.deleteButton.setOnClickListener {
-            listener.onDeleteProduct(product)
-        }
+        holder.bind(products[position])
     }
 
-    override fun getItemCount(): Int {
-        return products.size
-    }
+    override fun getItemCount(): Int = products.size
 
-    fun getCurrentProducts(): List<ProductEntity> {
-        return products
-    }
+    fun getCurrentProducts(): List<ProductEntity> = products.toList() // copia segura
 
     fun updateData(newProducts: List<ProductEntity>) {
-        products = newProducts
+        products = newProducts.map { it.copy() }.toMutableList()
         notifyDataSetChanged()
-    }
-    // Metodo para actualizar el precio total
-    private fun updateTotalPrice() {
-        val total = products.sumOf { it.price.toSafePriceDouble() * it.quantity }
-        // Actualiza el total en la actividad que contiene el RecyclerView
     }
 
     inner class CartViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val productName: TextView = itemView.findViewById(R.id.productName)
-        val productPrice: TextView = itemView.findViewById(R.id.productPrice)
-        val productImage: ImageView = itemView.findViewById(R.id.productImage)
-        val productQuantity: EditText = itemView.findViewById(R.id.productQuantity)
-        val deleteButton: Button = itemView.findViewById(R.id.deleteButton)  // Botón para eliminar
+        private val productName: TextView = itemView.findViewById(R.id.productName)
+        private val productPrice: TextView = itemView.findViewById(R.id.productPrice)
+        private val productImage: ImageView = itemView.findViewById(R.id.productImage)
+        private val productQuantity: EditText = itemView.findViewById(R.id.productQuantity)
+        private val deleteButton: Button = itemView.findViewById(R.id.deleteButton)
+
+        private var currentWatcher: TextWatcher? = null
+
+        fun bind(product: ProductEntity) {
+            productName.text = product.name
+            productPrice.text = product.price
+            Glide.with(itemView.context).load(product.imageUrl).into(productImage)
+
+            // Eliminar watcher previo antes de actualizar el texto
+            currentWatcher?.let {
+                productQuantity.removeTextChangedListener(it)
+            }
+
+            productQuantity.setText(product.quantity.toString())
+
+            currentWatcher = object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+                override fun afterTextChanged(s: Editable?) {
+                    val quantity = s?.toString()?.toIntOrNull() ?: 1
+                    if (product.quantity != quantity && quantity > 0) {
+                        product.quantity = quantity
+                        listener.onProductQuantityChanged(product)
+                    }
+                }
+            }
+
+            productQuantity.addTextChangedListener(currentWatcher)
+
+            deleteButton.setOnClickListener {
+                listener.onDeleteProduct(product)
+            }
+        }
     }
 
 }

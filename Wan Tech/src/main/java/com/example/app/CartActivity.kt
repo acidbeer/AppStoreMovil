@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,7 +38,7 @@ class CartActivity : AppCompatActivity() {
         finalizePurchaseButton = findViewById(R.id.finalizePurchaseButton)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
-        cartAdapter = CartAdapter(emptyList(), object : CartAdapter.OnProductClickListener {
+        cartAdapter = CartAdapter(mutableListOf(), object : CartAdapter.OnProductClickListener {
             override fun onDeleteProduct(product: ProductEntity) {
                 deleteProductFromCart(product)
             }
@@ -75,7 +76,8 @@ class CartActivity : AppCompatActivity() {
 
     private fun updateTotalPrice(products: List<ProductEntity>) {
         val total = products.sumOf { it.price.toSafePriceDouble()* it.quantity }
-        val formatted = NumberFormat.getCurrencyInstance(Locale("es", "CO")).format(total)
+        val formatter = NumberFormat.getCurrencyInstance(Locale("es", "CO"))
+        val formatted = formatter.format(total)
         totalPriceTextView.text = "Total: $formatted"
     }
 
@@ -93,6 +95,12 @@ class CartActivity : AppCompatActivity() {
             val updatedCart = db.productDao().getCartItems()
             cartAdapter.updateData(updatedCart)  // Actualiza la lista de productos en el carrito
             updateTotalPrice(updatedCart)  // Recalcula el total
+
+            finalizePurchaseButton.isEnabled = updatedCart.isNotEmpty()
+            
+            if (updatedCart.isEmpty()) {
+                Toast.makeText(this@CartActivity, "El carrito está vacío", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

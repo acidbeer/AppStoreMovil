@@ -12,8 +12,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.app.data.local.ProductEntity
 import com.example.app.data.local.PurchaseEntity
-import com.example.app.model.Product
+import com.example.app.utils.toSafePriceDouble
 
 class BuyActivity: AppCompatActivity() {
 
@@ -34,6 +35,7 @@ class BuyActivity: AppCompatActivity() {
         val emailEditText = findViewById<EditText>(R.id.emailEditText)
         val addressEditText = findViewById<EditText>(R.id.addressEditText)
         val recyclerView = findViewById<RecyclerView>(R.id.productsRecyclerView)
+        val totalTextView = findViewById<TextView>(R.id.totalPriceTextView)
 
 
         // ViewModel
@@ -41,7 +43,7 @@ class BuyActivity: AppCompatActivity() {
 
         // Obtener productos
         @Suppress("DEPRECATION")
-        val productList = intent.getParcelableArrayListExtra<Product>("selectedProducts")
+        val productList = intent.getParcelableArrayListExtra<ProductEntity>("selectedProducts")
 
         var productName: String? = null
         var productPrice: String? = null
@@ -49,61 +51,59 @@ class BuyActivity: AppCompatActivity() {
         var totalQuantity = 1
 
         if (!productList.isNullOrEmpty()) {
-
             if (productList.size == 1) {
-                // SOLO UN PRODUCTO → Mostrar como vista individual
                 val product = productList[0]
 
                 nameView.visibility = View.VISIBLE
                 priceView.visibility = View.VISIBLE
                 recyclerView.visibility = View.GONE
                 imageView.visibility = View.VISIBLE
+                totalTextView.visibility = View.GONE
 
                 productName = product.name
-                productPrice = product.price
+                val subtotal = product.price.toSafePriceDouble() * product.quantity
+                productPrice = "Subtotal: $${"%.2f".format(subtotal)} (${product.quantity} x $${"%.2f".format(product.price.toSafePriceDouble())})"
                 productImageUrl = product.imageUrl
                 totalQuantity = product.quantity
-
-                val totalTextView = findViewById<TextView>(R.id.totalPriceTextView)
-                totalTextView.visibility = View.GONE
 
                 nameView.text = productName
                 priceView.text = productPrice
                 Glide.with(this).load(productImageUrl).into(imageView)
 
-
             } else {
-                // MÚLTIPLES PRODUCTOS → Mostrar RecyclerView
                 recyclerView.visibility = View.VISIBLE
-                imageView.visibility = View.VISIBLE
                 nameView.visibility = View.GONE
                 priceView.visibility = View.GONE
+                imageView.visibility = View.GONE
+                totalTextView.visibility = View.VISIBLE
 
                 recyclerView.layoutManager = LinearLayoutManager(this)
                 recyclerView.adapter = BuyProductAdapter(productList)
 
-                val total = productList.sumOf { (it.price.toDoubleOrNull() ?: 0.0) * it.quantity }
+                val total = productList.sumOf {
+                    it.price.toSafePriceDouble() * it.quantity
+                }
+
                 productName = productList.joinToString("\n") { "${it.name} x${it.quantity}" }
                 productPrice = "Total: $${"%.2f".format(total)}"
-                productImageUrl = productList[0].imageUrl
+                productImageUrl = null
                 totalQuantity = productList.sumOf { it.quantity }
 
-                val totalTextView = findViewById<TextView>(R.id.totalPriceTextView)
-                totalTextView.visibility = View.VISIBLE
                 totalTextView.text = productPrice
+
             }
 
-        }else{
-            // NO LLEGÓ UNA LISTA → probablemente producto individual vía extras
-            recyclerView.visibility = View.GONE
-            imageView.visibility = View.VISIBLE
+        } else {
+            // En caso de que venga desde ProductActivity individual
             nameView.visibility = View.VISIBLE
             priceView.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
+            imageView.visibility = View.VISIBLE
+            totalTextView.visibility = View.GONE
 
             productName = intent.getStringExtra("name")
             productPrice = intent.getStringExtra("price")
             productImageUrl = intent.getStringExtra("imageUrl")
-            totalQuantity = 1
 
             nameView.text = productName ?: "Nombre no disponible"
             priceView.text = productPrice ?: "$0.00"
@@ -111,30 +111,23 @@ class BuyActivity: AppCompatActivity() {
             if (!productImageUrl.isNullOrEmpty()) {
                 Glide.with(this).load(productImageUrl).into(imageView)
             }
-
         }
-
 
         confirmButton.setOnClickListener {
             val userName = nameEditText.text.toString().trim()
             val userEmail = emailEditText.text.toString().trim()
             val userAddress = addressEditText.text.toString().trim()
 
-
-            // Validar que los campos no estén vacíos
             if (userName.isEmpty() || userEmail.isEmpty() || userAddress.isEmpty()) {
                 Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Validar el formato del email
             if (!android.util.Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
                 Toast.makeText(this, "El correo electrónico no es válido", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-
-            // Crear objeto de compra con la cantidad
             val purchase = PurchaseEntity(
                 name = productName ?: "Nombre no disponible",
                 price = productPrice ?: "$0.00",
@@ -142,14 +135,11 @@ class BuyActivity: AppCompatActivity() {
                 quantity = totalQuantity
             )
 
-            // Guardar compra en la base de datos
             purchaseViewModel.savePurchase(purchase)
 
             Toast.makeText(this, "¡Compra confirmada!", Toast.LENGTH_LONG).show()
 
-            // Redirigir a ProductActivity
-            val intent = Intent(this, ProductActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, ProductActivity::class.java))
             finish()
         }
 
