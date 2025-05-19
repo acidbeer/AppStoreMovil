@@ -10,9 +10,14 @@
     <string name="log_in">Log in</string>
     <string name="jane_example_com">jane@example.com</string>
     <string name="key">********</string>
+    <string name="confirm_password">Confirmar contraseña</string>
     <string name="loginbtn">LOGIN</string>
     <string name="promoci_n">Promoción</string>
     <string name="logo">Logo</string>
     <string name="registerprincipal">REGISTER</string>
     <string name="log_inprincipal">LOG IN</string>
+    <!-- Reset Password -->
+    <string name="reset_password">Restablecer contraseña</string>
+    <string name="email">Correo electrónico</string>
+    <string name="new_password">Nueva contraseña</string>
 </resources>
