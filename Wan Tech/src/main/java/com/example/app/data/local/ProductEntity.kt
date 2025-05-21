@@ -22,7 +22,8 @@ data class ProductEntity(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
-        parcel.readByte() != 0.toByte() // Para el valor Booleano
+        parcel.readByte() != 0.toByte() ,// Para el valor Booleano
+        parcel.readInt() // Aquí lees `quantity`
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -32,11 +33,10 @@ data class ProductEntity(
         parcel.writeString(price)
         parcel.writeString(description)
         parcel.writeByte(if (isInCart) 1 else 0) // Convertir Booleano a Byte
+        parcel.writeInt(quantity)
     }
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents(): Int = 0
 
     companion object CREATOR : Parcelable.Creator<ProductEntity> {
         override fun createFromParcel(parcel: Parcel): ProductEntity {

@@ -1,43 +1,69 @@
 package com.example.app
 
+
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
+import android.util.Patterns
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.example.app.data.local.AppDatabase
+import com.example.app.data.local.UserRepository
+import com.example.app.databinding.ActivityLoginBinding
+import kotlinx.coroutines.launch
 
 
 class LoginActivity : AppCompatActivity() {
-    private lateinit var emailInput: EditText
-    private lateinit var passwordInput: EditText
-    private lateinit var btnLogin: Button
+    private lateinit var binding: ActivityLoginBinding
+    private val repo by lazy {
+        UserRepository(AppDatabase.getDatabase(this).userDao())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
 
-        emailInput = findViewById(R.id.etEmail)
-        passwordInput = findViewById(R.id.etPassword)
-        btnLogin = findViewById(R.id.btnLogin)
+        // Infla el layout y crea el binding
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        btnLogin.setOnClickListener {
-            val email = emailInput.text.toString().trim()
-            val password = passwordInput.text.toString().trim()
+        // Rellenar email si viene del registro
+        intent.getStringExtra("EXTRA_EMAIL")?.let { binding.etEmail.setText(it) }
 
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Por favor completa todos los campos", Toast.LENGTH_SHORT).show()
-            } else {
-                // Aquí podrías validar con una API o base de datos, por ahora es solo demostrativo
-                if (email == "jane@example.com" && password == "123456") {
-                    // Ir a otra actividad
-                    val intent = Intent(this, ProductActivity::class.java)
-                    startActivity(intent)
+        binding.btnLogin.setOnClickListener { loginUser() }
+
+        // NEW: enlace para restablecer contraseña
+        binding.tvForgotPwd.setOnClickListener {
+            startActivity(Intent(this, ResetPasswordActivity::class.java))
+        }
+    }
+
+    /** Valida los datos y redirige a ProductActivity si son correctos */
+    private fun loginUser() = lifecycleScope.launch {
+        val email = binding.etEmail.text.toString().trim()
+        val pwd   = binding.etPassword.text.toString()
+
+        when {
+            email.isBlank() || pwd.isBlank() ->
+                toast("Completa todos los campos")
+
+            !Patterns.EMAIL_ADDRESS.matcher(email).matches() ->
+                toast("Correo inválido")
+
+            else -> {
+                val ok = repo.login(email, pwd)
+                if (ok) {
+                    // Redirige a ProductActivity
+                    startActivity(Intent(this@LoginActivity, ProductActivity::class.java))
+
                     finish()
                 } else {
-                    Toast.makeText(this, "Credenciales inválidas", Toast.LENGTH_SHORT).show()
+                    toast("Credenciales inválidas")
                 }
             }
         }
     }
+
+    private fun toast(msg: String) =
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+
 }

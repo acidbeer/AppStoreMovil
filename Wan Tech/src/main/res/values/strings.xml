@@ -13,6 +13,12 @@
     <string name="loginbtn">Ingresar</string>
     <string name="promoci_n">Promoción</string>
     <string name="logo">Logo</string>
-    <string name="registerprincipal">Registro</string>
-    <string name="log_inprincipal">Iniciar sesión</string>
+    <string name="forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="log_inprincipal">LOG IN</string>
+    <string name="registerprincipal">REGISTER</string>
+    <string name="confirm_password">Confirmar contraseña</string>
+    <!-- Reset Password -->
+    <string name="reset_password">Restablecer contraseña</string>
+    <string name="email">Correo electrónico</string>
+    <string name="new_password">Nueva contraseña</string>
 </resources>
