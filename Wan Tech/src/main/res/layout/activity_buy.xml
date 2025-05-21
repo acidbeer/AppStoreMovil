@@ -71,14 +71,27 @@
             android:layout_marginBottom="12dp"
             android:textSize="14sp"/>
 
-        <EditText
-            android:id="@+id/addressEditText"
-            android:textSize="14sp"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Dirección de envío"
-            android:inputType="textPostalAddress"
-            android:layout_marginBottom="12dp" />
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/addressEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Dirección de envío"
+                android:inputType="textPostalAddress"/>
+
+            <ImageButton
+                android:id="@+id/locationButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@android:drawable/ic_menu_mylocation"
+                android:contentDescription="Obtener ubicación actual"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+        </LinearLayout>
 
         <!-- Total general solo visible con múltiples productos -->
         <TextView
