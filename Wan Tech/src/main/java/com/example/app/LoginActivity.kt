@@ -30,6 +30,11 @@ class LoginActivity : AppCompatActivity() {
         intent.getStringExtra("EXTRA_EMAIL")?.let { binding.etEmail.setText(it) }
 
         binding.btnLogin.setOnClickListener { loginUser() }
+
+        // NEW: enlace para restablecer contraseña
+        binding.tvForgotPwd.setOnClickListener {
+            startActivity(Intent(this, ResetPasswordActivity::class.java))
+        }
     }
 
     /** Valida los datos y redirige a ProductActivity si son correctos */
