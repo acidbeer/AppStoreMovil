@@ -11,6 +11,7 @@ import com.example.app.data.local.AppDatabase
 import com.example.app.data.local.UserRepository
 import com.example.app.databinding.ActivityLoginBinding
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class LoginActivity : AppCompatActivity() {
@@ -50,11 +51,25 @@ class LoginActivity : AppCompatActivity() {
                 toast("Correo inválido")
 
             else -> {
-                val ok = repo.login(email, pwd)
-                if (ok) {
-                    // Redirige a ProductActivity
-                    startActivity(Intent(this@LoginActivity, ProductActivity::class.java))
+                val user = withContext(kotlinx.coroutines.Dispatchers.IO) {
+                    repo.loginAndGetUser(email, pwd)
 
+                }
+
+                if (user != null && repo.verifyPassword(pwd, user.passwordHash)) {
+                    Toast.makeText(this@LoginActivity, "Rol: ${user.role}", Toast.LENGTH_SHORT).show()
+                    // Redirige según rol
+                    when (user.role) {
+                        "admin" -> {
+                            val intent = Intent(this@LoginActivity, AdminDashboardActivity::class.java)
+                            intent.putExtra("USER_ROLE", "admin")
+                            startActivity(intent)
+                        }
+                        "user" -> {
+                            startActivity(Intent(this@LoginActivity, ProductActivity::class.java))
+                        }
+                        else -> toast("Rol no reconocido: ${user.role}")
+                    }
                     finish()
                 } else {
                     toast("Credenciales inválidas")

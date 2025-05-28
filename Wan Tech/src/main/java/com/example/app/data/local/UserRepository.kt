@@ -4,9 +4,12 @@ import java.security.MessageDigest
 
 class UserRepository (private val dao: UserDao) {
 
-    suspend fun register(email: String, plainPwd: String) {
+    suspend fun register(email: String, plainPwd: String, role: String) {
         val hash = hashPassword(plainPwd)
-        val user = UserEntity(email, hash)
+        val user = UserEntity(
+            email = email,
+            passwordHash = hash,
+            role=role)
         dao.insertUser(user)
     }
 
@@ -26,6 +29,12 @@ class UserRepository (private val dao: UserDao) {
             .digest(pwd.toByteArray())
             .joinToString("") { "%02x".format(it) }
 
-    private fun verifyPassword(plain: String, hash: String): Boolean =
+    fun verifyPassword(plain: String, hash: String): Boolean =
         hashPassword(plain) == hash
+
+    suspend fun loginAndGetUser(email: String, plainPwd: String): UserEntity? {
+        val user = dao.getUserByEmail(email) ?: return null
+        return if (verifyPassword(plainPwd, user.passwordHash)) user else null
+    }
+
 }
