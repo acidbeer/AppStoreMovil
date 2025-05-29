@@ -4,8 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -41,6 +43,8 @@ class ProductActivity : AppCompatActivity() {
         popularRecycler.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         popularRecycler.adapter = adapter
+
+        handleBackPress()
 
         loadProductsFromDatabase()
     }
@@ -78,5 +82,27 @@ class ProductActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    private fun handleBackPress() {
+        val fromAdmin = intent.getBooleanExtra("fromAdmin", false)
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (fromAdmin) {
+                    val intent = Intent(this@ProductActivity, AdminDashboardActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                    Toast.makeText(
+                        this@ProductActivity,
+                        "Regresando a vista administrador",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    startActivity(intent)
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                    finish()
+                } else {
+                    finish() // Comportamiento normal
+                }
+            }
+        })
+    }
 
 }

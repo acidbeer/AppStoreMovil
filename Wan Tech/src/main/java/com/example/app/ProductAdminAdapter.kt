@@ -3,10 +3,12 @@ package com.example.app
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.app.data.local.ProductEntity
 
 class ProductAdminAdapter(
@@ -24,8 +26,17 @@ class ProductAdminAdapter(
 
     inner class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(product: ProductEntity) {
-            itemView.findViewById<TextView>(R.id.tvName).text = product.name
-            itemView.findViewById<TextView>(R.id.tvPrice).text = "$${product.price}"
+            val nameView = itemView.findViewById<TextView>(R.id.tvName)
+            val priceView = itemView.findViewById<TextView>(R.id.tvPrice)
+            val imageView = itemView.findViewById<ImageView>(R.id.ivProduct)
+
+            nameView.text = product.name
+            priceView.text = "$${product.price}"
+
+            Glide.with(itemView.context)
+                .load(product.imageUrl)
+                .into(imageView)
+
             itemView.setOnClickListener { onEditClick(product) }
             itemView.findViewById<View>(R.id.btnEdit).setOnClickListener {
                 onEditClick(product)
