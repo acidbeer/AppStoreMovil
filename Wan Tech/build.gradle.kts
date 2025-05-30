@@ -70,4 +70,7 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    //camara
+    implementation ("com.google.mlkit:text-recognition:16.0.0")
+
 }

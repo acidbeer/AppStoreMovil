@@ -1,8 +1,10 @@
 package com.example.app
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.location.Location
 import android.os.Bundle
 import android.view.View
@@ -25,6 +27,9 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import java.util.Locale
 import android.location.Geocoder
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.io.IOException
 
 class BuyActivity: AppCompatActivity() {
@@ -32,7 +37,9 @@ class BuyActivity: AppCompatActivity() {
     private lateinit var purchaseViewModel: PurchaseViewModel
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val LOCATION_PERMISSION_REQUEST_CODE = 1001
-
+    private val CAMERA_REQUEST_CODE = 101
+    private lateinit var nameEditText: EditText
+    private lateinit var emailEditText: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,10 +54,11 @@ class BuyActivity: AppCompatActivity() {
         val priceView = findViewById<TextView>(R.id.productPriceBuy)
         val confirmButton = findViewById<android.widget.Button>(R.id.confirmBuyButton)
         val locationButton = findViewById<ImageButton>(R.id.locationButton)
+        val scanButton = findViewById<ImageButton>(R.id.scanButton)
 
         // Nuevas referencias a los campos de entrada
-        val nameEditText = findViewById<EditText>(R.id.nameEditText)
-        val emailEditText = findViewById<EditText>(R.id.emailEditText)
+        nameEditText = findViewById(R.id.nameEditText)
+        emailEditText = findViewById(R.id.emailEditText)
         val addressEditText = findViewById<EditText>(R.id.addressEditText)
         val recyclerView = findViewById<RecyclerView>(R.id.productsRecyclerView)
         val totalTextView = findViewById<TextView>(R.id.totalPriceTextView)
@@ -58,6 +66,22 @@ class BuyActivity: AppCompatActivity() {
 
         // ViewModel
         purchaseViewModel = ViewModelProvider(this)[PurchaseViewModel::class.java]
+
+        // Configurar escáner fuera del botón de confirmar
+        scanButton.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.CAMERA),
+                    CAMERA_REQUEST_CODE
+                )
+            } else {
+                val cameraIntent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+                startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE)
+            }
+        }
 
         // Configurar el botón de ubicación
         locationButton.setOnClickListener {
@@ -166,8 +190,72 @@ class BuyActivity: AppCompatActivity() {
 
             Toast.makeText(this, "¡Compra confirmada!", Toast.LENGTH_LONG).show()
 
-            startActivity(Intent(this, ProductActivity::class.java))
+
+            val intentFactura = Intent(this, FacturaActivity::class.java).apply {
+                putExtra("nombre", userName)
+                putExtra("email", userEmail)
+                putExtra("direccion", userAddress)
+                putExtra("producto", productName)
+                putExtra("precio", productPrice)
+                putExtra("cantidad", totalQuantity)
+                putExtra("imageUrl", productImageUrl ?: "")
+                putExtra("nombreTienda", "TECNOLOGY STORE")
+                putExtra("nitTienda", "123456789-0")
+            }
+            startActivity(intentFactura)
             finish()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val imageBitmap = data?.extras?.get("data") as? Bitmap ?: return
+            val inputImage = InputImage.fromBitmap(imageBitmap, 0)
+            val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+
+            recognizer.process(inputImage)
+                .addOnSuccessListener { visionText ->
+                    var nombreExtraido = ""
+                    var cedulaExtraida = ""
+
+                    for (block in visionText.textBlocks) {
+                        for (line in block.lines) {
+                            val text = line.text.uppercase().trim()
+
+                            // Extraer nombres o apellidos
+                            if (text.startsWith("NOMBRES") || text.startsWith("APELLIDOS")) {
+                                nombreExtraido += text.substringAfter(" ").trim() + " "
+                            }
+
+                            // Extraer número de cédula
+                            if (text.contains("CÉDULA") || text.contains("DOCUMENTO")) {
+                                val cedula = text.replace(Regex("[^0-9]"), "")
+                                if (cedula.length in 6..10) cedulaExtraida = cedula
+                            }
+
+                            // Fallback si no hay palabras claves
+                            if (text.matches(Regex("\\d{6,10}"))) {
+                                cedulaExtraida = text
+                            }
+                        }
+                    }
+
+                    if (nombreExtraido.isNotBlank()) {
+                        nameEditText.setText(nombreExtraido.trim())
+                    }
+
+                    if (cedulaExtraida.isNotBlank()) {
+                        emailEditText.setText(cedulaExtraida)
+                    }
+
+                    if (nombreExtraido.isBlank() && cedulaExtraida.isBlank()) {
+                        Toast.makeText(this, "No se encontró información reconocible", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, "No se pudo escanear el texto", Toast.LENGTH_SHORT).show()
+                }
         }
     }
 
