@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.app.data.local.AppDatabase
-import com.example.app.data.local.ProductDao
 import com.example.app.data.local.ProductEntity
 import com.example.app.databinding.ActivityAdminDashboardBinding
 import kotlinx.coroutines.Dispatchers
@@ -92,14 +91,16 @@ class AdminDashboardActivity : AppCompatActivity()  {
         val dao = AppDatabase.getDatabase(this@AdminDashboardActivity).productDao()
         val allProducts = withContext(Dispatchers.IO) { dao.getAll() }
 
-        val inputPrice = value.replace(",", ".").toDoubleOrNull()
+        // Intentar convertir el valor ingresado a Double (permitiendo ',' o '.')
+        val inputPrice = value.trim().replace(",", ".").toDoubleOrNull()
         if (inputPrice == null) {
-            Toast.makeText(this@AdminDashboardActivity, "Precio inválido", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@AdminDashboardActivity, "Precio inválido. Usa punto decimal (.)", Toast.LENGTH_SHORT).show()
             return@launch
         }
 
+        // Filtrar en memoria según el tipo
         val filtered = allProducts.filter {
-            val productPrice = it.price.replace(",", ".").toDoubleOrNull()
+            val productPrice = it.price.trim().replace(",", ".").toDoubleOrNull()
             if (productPrice != null) {
                 when (filterType) {
                     "Menor a" -> productPrice < inputPrice

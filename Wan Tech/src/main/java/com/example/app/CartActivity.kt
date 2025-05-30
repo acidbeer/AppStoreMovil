@@ -91,13 +91,19 @@ class CartActivity : AppCompatActivity() {
     }
     private fun deleteProductFromCart(product: ProductEntity) {
         lifecycleScope.launch {
-            db.productDao().delete(product)  // Elimina el producto de la base de datos
-            val updatedCart = db.productDao().getCartItems()
-            cartAdapter.updateData(updatedCart)  // Actualiza la lista de productos en el carrito
-            updateTotalPrice(updatedCart)  // Recalcula el total
+            // Desmarcar el producto como fuera del carrito
+            db.productDao().update(product.copy(isInCart = false))
 
+            // Obtener los productos actualizados del carrito
+            val updatedCart = db.productDao().getCartItems()
+
+            // Actualizar RecyclerView y total
+            cartAdapter.updateData(updatedCart)
+            updateTotalPrice(updatedCart)
+
+            // Deshabilitar botón si ya no hay productos
             finalizePurchaseButton.isEnabled = updatedCart.isNotEmpty()
-            
+
             if (updatedCart.isEmpty()) {
                 Toast.makeText(this@CartActivity, "El carrito está vacío", Toast.LENGTH_SHORT).show()
             }

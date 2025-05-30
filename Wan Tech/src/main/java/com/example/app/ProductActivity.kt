@@ -2,6 +2,7 @@ package com.example.app
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -23,6 +24,7 @@ class ProductActivity : AppCompatActivity() {
     private lateinit var featuredTitle: TextView
     private lateinit var featuredPrice: TextView
     private lateinit var popularRecycler: RecyclerView
+
 
     private lateinit var adapter: PopularAdapterRoom
     private var allProducts: List<ProductEntity> = emptyList()
@@ -47,6 +49,7 @@ class ProductActivity : AppCompatActivity() {
         handleBackPress()
 
         loadProductsFromDatabase()
+
     }
 
     private fun loadProductsFromDatabase() = lifecycleScope.launch {
@@ -88,16 +91,12 @@ class ProductActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (fromAdmin) {
-                    val intent = Intent(this@ProductActivity, AdminDashboardActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                     Toast.makeText(
                         this@ProductActivity,
                         "Regresando a vista administrador",
                         Toast.LENGTH_SHORT
                     ).show()
-                    startActivity(intent)
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-                    finish()
+                    finish() // Esto te devolverá a AdminDashboardActivity porque no la cerraste
                 } else {
                     finish() // Comportamiento normal
                 }
