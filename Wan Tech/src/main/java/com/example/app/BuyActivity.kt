@@ -209,55 +209,57 @@ class BuyActivity: AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as? Bitmap ?: return
             val inputImage = InputImage.fromBitmap(imageBitmap, 0)
             val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
             recognizer.process(inputImage)
                 .addOnSuccessListener { visionText ->
-                    var nombreExtraido = ""
-                    var cedulaExtraida = ""
+                    val lines = visionText.textBlocks.flatMap { it.lines.map { it.text.uppercase().trim() } }
 
-                    for (block in visionText.textBlocks) {
-                        for (line in block.lines) {
-                            val text = line.text.uppercase().trim()
+                    var cedula = ""
+                    var nombres = ""
+                    var apellidos = ""
 
-                            // Extraer nombres o apellidos
-                            if (text.startsWith("NOMBRES") || text.startsWith("APELLIDOS")) {
-                                nombreExtraido += text.substringAfter(" ").trim() + " "
-                            }
+                    for (i in lines.indices) {
+                        val line = lines[i]
 
-                            // Extraer número de cédula
-                            if (text.contains("CÉDULA") || text.contains("DOCUMENTO")) {
-                                val cedula = text.replace(Regex("[^0-9]"), "")
-                                if (cedula.length in 6..10) cedulaExtraida = cedula
-                            }
+                        if (line.contains("NUMERO")) {
+                            cedula = line.replace(Regex("[^0-9]"), "")
+                        }
 
-                            // Fallback si no hay palabras claves
-                            if (text.matches(Regex("\\d{6,10}"))) {
-                                cedulaExtraida = text
-                            }
+                        if (line.contains("NOMBRES") && i > 0) {
+                            nombres = lines.getOrNull(i + 1)?.capitalizeWords() ?: ""
+                        }
+
+                        if (line.contains("APELLIDOS") && i > 0) {
+                            apellidos = lines.getOrNull(i - 1)?.capitalizeWords() ?: ""
                         }
                     }
 
-                    if (nombreExtraido.isNotBlank()) {
-                        nameEditText.setText(nombreExtraido.trim())
+                    // Actualizar campos en pantalla
+                    if (nombres.isNotBlank() || apellidos.isNotBlank()) {
+                        nameEditText.setText("$nombres $apellidos".trim())
                     }
 
-                    if (cedulaExtraida.isNotBlank()) {
-                        emailEditText.setText(cedulaExtraida)
+                    if (cedula.isNotBlank()) {
+                        emailEditText.setText(cedula)
                     }
 
-                    if (nombreExtraido.isBlank() && cedulaExtraida.isBlank()) {
-                        Toast.makeText(this, "No se encontró información reconocible", Toast.LENGTH_SHORT).show()
+                    if (nombres.isBlank() && apellidos.isBlank() && cedula.isBlank()) {
+                        Toast.makeText(this, "No se reconoció información válida", Toast.LENGTH_SHORT).show()
                     }
                 }
                 .addOnFailureListener {
-                    Toast.makeText(this, "No se pudo escanear el texto", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Error al escanear el documento", Toast.LENGTH_SHORT).show()
                 }
         }
     }
+
+    fun String.capitalizeWords(): String =
+        lowercase().split(" ").joinToString(" ") { it.replaceFirstChar { char -> char.uppercase() } }
+
 
     private fun obtenerUbicacionActual(addressEditText: EditText) {
         // Verificar permisos
