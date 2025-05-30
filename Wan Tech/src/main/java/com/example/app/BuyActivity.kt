@@ -27,9 +27,14 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import java.util.Locale
 import android.location.Geocoder
+import android.net.Uri
+import android.os.Environment
+import android.provider.MediaStore
+import androidx.core.content.FileProvider
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import java.io.File
 import java.io.IOException
 
 class BuyActivity: AppCompatActivity() {
@@ -39,7 +44,9 @@ class BuyActivity: AppCompatActivity() {
     private val LOCATION_PERMISSION_REQUEST_CODE = 1001
     private val CAMERA_REQUEST_CODE = 101
     private lateinit var nameEditText: EditText
+    private lateinit var idNumberEditText: EditText
     private lateinit var emailEditText: EditText
+    private var photoUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +65,7 @@ class BuyActivity: AppCompatActivity() {
 
         // Nuevas referencias a los campos de entrada
         nameEditText = findViewById(R.id.nameEditText)
+        idNumberEditText = findViewById(R.id.idNumberEditText)
         emailEditText = findViewById(R.id.emailEditText)
         val addressEditText = findViewById<EditText>(R.id.addressEditText)
         val recyclerView = findViewById<RecyclerView>(R.id.productsRecyclerView)
@@ -78,7 +86,16 @@ class BuyActivity: AppCompatActivity() {
                     CAMERA_REQUEST_CODE
                 )
             } else {
-                val cameraIntent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+                val photoFile = File.createTempFile(
+                    "cedula_scan", ".jpg",
+                    getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                )
+
+                photoUri = FileProvider.getUriForFile(this, "${packageName}.provider", photoFile)
+
+                val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+                cameraIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                 startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE)
             }
         }
@@ -190,9 +207,23 @@ class BuyActivity: AppCompatActivity() {
 
             Toast.makeText(this, "¡Compra confirmada!", Toast.LENGTH_LONG).show()
 
+            val productosParaFactura = if (!productList.isNullOrEmpty()) {
+                ArrayList(productList)
+            } else {
+                arrayListOf(
+                    ProductEntity(
+                        id = 0, // Puedes poner 0 o un valor temporal
+                        name = productName ?: "Sin nombre",
+                        imageUrl = productImageUrl ?: "",
+                        price = productPrice?.replace(Regex("[^\\d.]"), "") ?: "0.0",
+                        description = "Descripción no disponible", // Ajusta si tienes una descripción real
+                        isInCart = false,
+                        quantity = totalQuantity
+                    )
+                )
+            }
 
             val intentFactura = Intent(this, FacturaActivity::class.java).apply {
-                putExtra("nombre", userName)
                 putExtra("email", userEmail)
                 putExtra("direccion", userAddress)
                 putExtra("producto", productName)
@@ -201,6 +232,10 @@ class BuyActivity: AppCompatActivity() {
                 putExtra("imageUrl", productImageUrl ?: "")
                 putExtra("nombreTienda", "TECNOLOGY STORE")
                 putExtra("nitTienda", "123456789-0")
+                putExtra("nombre", userName)
+                putExtra("cedula", idNumberEditText.text.toString())
+                putExtra("total", productPrice)
+                putParcelableArrayListExtra("productos", productosParaFactura)
             }
             startActivity(intentFactura)
             finish()
@@ -209,57 +244,69 @@ class BuyActivity: AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
-            val imageBitmap = data?.extras?.get("data") as? Bitmap ?: return
-            val inputImage = InputImage.fromBitmap(imageBitmap, 0)
-            val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
-            recognizer.process(inputImage)
-                .addOnSuccessListener { visionText ->
-                    val lines = visionText.textBlocks.flatMap { it.lines.map { it.text.uppercase().trim() } }
+        if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            photoUri?.let { uri ->
+                val inputImage = InputImage.fromFilePath(this, uri)
+                val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
-                    var cedula = ""
-                    var nombres = ""
-                    var apellidos = ""
+                recognizer.process(inputImage)
+                    .addOnSuccessListener { visionText ->
+                        var cedula = ""
+                        var nombres = ""
+                        var apellidos = ""
 
-                    for (i in lines.indices) {
-                        val line = lines[i]
+                        val lines = visionText.textBlocks.flatMap { it.lines.map { it.text.trim() } }
 
-                        if (line.contains("NUMERO")) {
-                            cedula = line.replace(Regex("[^0-9]"), "")
+                        // Extraer cédula usando Regex
+                        val cedulaRegex = Regex("N[ÚU]MERO[:\\s]*([0-9\\.]{6,15})")
+                        lines.forEach { line ->
+                            val match = cedulaRegex.find(line.uppercase())
+                            if (match != null) {
+                                val rawCedula = match.groupValues[1]
+                                cedula = rawCedula.replace(".", "")
+                            }
                         }
 
-                        if (line.contains("NOMBRES") && i > 0) {
-                            nombres = lines.getOrNull(i + 1)?.capitalizeWords() ?: ""
+                        // 2. Extraer nombres y apellidos usando la línea anterior a la etiqueta
+                        for (i in 1 until lines.size) {
+                            val currentLine = lines[i].uppercase()
+
+                            if (currentLine.contains("NOMBRES")) {
+                                nombres = limpiarTexto(lines[i - 1])
+                            }
+
+                            if (currentLine.contains("APELLIDOS")) {
+                                apellidos = limpiarTexto(lines[i - 1])
+                            }
                         }
 
-                        if (line.contains("APELLIDOS") && i > 0) {
-                            apellidos = lines.getOrNull(i - 1)?.capitalizeWords() ?: ""
+                        // 3. Asignar a campos
+                        if (nombres.isNotBlank() || apellidos.isNotBlank()) {
+                            nameEditText.setText("$nombres $apellidos".trim())
+                        }
+
+                        if (cedula.isNotBlank()) {
+                            idNumberEditText.setText(cedula)
+                        }
+
+                        if (cedula.isBlank() && nombres.isBlank() && apellidos.isBlank()) {
+                            Toast.makeText(this, "No se reconoció información válida", Toast.LENGTH_SHORT).show()
                         }
                     }
-
-                    // Actualizar campos en pantalla
-                    if (nombres.isNotBlank() || apellidos.isNotBlank()) {
-                        nameEditText.setText("$nombres $apellidos".trim())
+                    .addOnFailureListener {
+                        Toast.makeText(this, "Error al escanear texto", Toast.LENGTH_SHORT).show()
                     }
-
-                    if (cedula.isNotBlank()) {
-                        emailEditText.setText(cedula)
-                    }
-
-                    if (nombres.isBlank() && apellidos.isBlank() && cedula.isBlank()) {
-                        Toast.makeText(this, "No se reconoció información válida", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                .addOnFailureListener {
-                    Toast.makeText(this, "Error al escanear el documento", Toast.LENGTH_SHORT).show()
-                }
+            }
         }
     }
 
-    fun String.capitalizeWords(): String =
-        lowercase().split(" ").joinToString(" ") { it.replaceFirstChar { char -> char.uppercase() } }
-
+    private fun limpiarTexto(texto: String): String {
+        return texto
+            .replace("[^A-Za-zÁÉÍÓÚÑáéíóúñ\\s]".toRegex(), "") // solo letras y espacios
+            .replace("\\s+".toRegex(), " ") // un solo espacio entre palabras
+            .trim()
+    }
 
     private fun obtenerUbicacionActual(addressEditText: EditText) {
         // Verificar permisos
