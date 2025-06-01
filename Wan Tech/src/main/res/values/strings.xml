@@ -1,3 +1,30 @@
 <resources>
     <string name="app_name">App</string>
+    <string name="ochoajairo73_gmail_com">ochoajairo73@gmail.com</string>
+    <string name="register">Register</string>
+    <string name="contrasena">Contraseña</string>
+    <string name="tecnology_store">TECNOLOGY STORE</string>
+    <string name="usuario">Usuario</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="by_signing_up_you_agree_to_photo_s_terms_of_service_and_polivacy">By signing up, you agree to Photo´s Terms of Service and Privacy Policy</string>
+    <string name="log_in">Log in</string>
+    <string name="jane_example_com">jane@example.com</string>
+    <string name="key">********</string>
+    <string name="confirm_password">Confirmar contraseña</string>
+    <string name="loginbtn">LOGIN</string>
+    <string name="forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="promoci_n">Promoción</string>
+    <string name="logo">Logo</string>
+    <string name="registerprincipal">REGISTER</string>
+    <string name="log_inprincipal">LOG IN</string>
+    <!-- Reset Password -->
+    <string name="reset_password">Restablecer contraseña</string>
+    <string name="email">Correo electrónico</string>
+    <string name="new_password">Nueva contraseña</string>
+    <string name="default_web_client_id">1032235952381-i6ln72eqis8o1qe5ra4cerd44t0lgort.apps.googleusercontent.com</string>
+    <string-array name="price_filter_options">
+        <item>Menor a</item>
+        <item>Mayor a</item>
+        <item>Igual a</item>
+    </string-array>
 </resources>

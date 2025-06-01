@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Nombre de tienda -->
+        <TextView
+            android:id="@+id/tvTienda"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TECNOLOGY STORE"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="#2E7D32" />
+
+        <!-- NIT -->
+        <TextView
+            android:id="@+id/tvNIT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NIT: 900.123.456-7"
+            android:textColor="#555555"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Datos del comprador -->
+        <TextView
+            android:id="@+id/tvNombre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre:"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvCedula"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cédula:"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Título de productos -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Productos Comprados:"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Lista de productos -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvProductos"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Total -->
+        <TextView
+            android:id="@+id/tvTotal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Total: $0.00"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#B71C1C" />
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="16dp">
+
+    <!-- Logo Texto -->
+    <TextView
+        android:id="@+id/tvLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TECNOLOGY STORE"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:background="#CDDC39"
+        android:padding="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp" />
+
+    <!-- Título "PRODUCTOS" -->
+    <TextView
+        android:id="@+id/tvProductsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PRODUCTOS"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#3223c6"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@id/tvLogo"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Imagen destacada (debajo del título productos) -->
+    <ImageView
+        android:id="@+id/featuredImage"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/tvProductsTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Título del producto destacado -->
+    <TextView
+        android:id="@+id/featuredTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Producto destacado"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/featuredImage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Precio del producto destacado -->
+    <TextView
+        android:id="@+id/featuredPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$0.00"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/featuredTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Texto: Más buscados -->
+    <TextView
+        android:id="@+id/popularLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Más buscados"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/featuredPrice"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- RecyclerView horizontal -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/popularRecycler"
+        android:layout_width="0dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/popularLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Indicador de productos actuales -->
+    <LinearLayout
+        android:id="@+id/sectionAllProducts"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@id/popularRecycler"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/ic_menu_info_details"
+            android:layout_marginEnd="8dp"
+            app:tint="@android:color/holo_blue_dark" />
+
+        <TextView
+            android:id="@+id/tvProductInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Estos son los productos disponibles actualmente"
+            android:textColor="#555555"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
