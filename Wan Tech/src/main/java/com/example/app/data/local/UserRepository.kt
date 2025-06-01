@@ -37,4 +37,12 @@ class UserRepository (private val dao: UserDao) {
         return if (verifyPassword(plainPwd, user.passwordHash)) user else null
     }
 
+    suspend fun getUserByEmail(email: String): UserEntity? {
+        return dao.getUserByEmail(email)
+    }
+
+    suspend fun insertUser(user: UserEntity) {
+        dao.insertUser(user)
+    }
+
 }

@@ -73,4 +73,6 @@ dependencies {
     //camara
     implementation ("com.google.mlkit:text-recognition:16.0.0")
 
+    implementation ("com.google.android.gms:play-services-auth:20.7.0")
+
 }

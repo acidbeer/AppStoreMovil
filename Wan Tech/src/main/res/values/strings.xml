@@ -21,6 +21,7 @@
     <string name="reset_password">Restablecer contraseña</string>
     <string name="email">Correo electrónico</string>
     <string name="new_password">Nueva contraseña</string>
+    <string name="default_web_client_id">1032235952381-i6ln72eqis8o1qe5ra4cerd44t0lgort.apps.googleusercontent.com</string>
     <string-array name="price_filter_options">
         <item>Menor a</item>
         <item>Mayor a</item>
