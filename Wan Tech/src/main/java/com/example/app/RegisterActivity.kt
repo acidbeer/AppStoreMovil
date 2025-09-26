@@ -18,6 +18,7 @@ import kotlinx.coroutines.withContext
 
 class RegisterActivity : AppCompatActivity() {
 
+
     // View Binding
     private lateinit var binding: ActivityRegisterBinding
 
